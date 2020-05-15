@@ -45,11 +45,13 @@ class Cart(object):
             yield item
 
     def __len__(self):
+        # считаем количество айтемов в корзине
         return sum(item['quantity'] for item in self.cart.values())
 
     def get_total_price(self):
         return sum(Decimal(item['price']) * item ['quantity'] for item in self.cart.values())
 
     def clear(self):
+        # удаляем сессию с корзиной
         del self.session[settings.CART_SESSION_ID]
         self.session.modified = True
