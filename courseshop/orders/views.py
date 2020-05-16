@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import OrderItem
 from .forms import OrderCreateForm
 from cart.cart import Cart
+from .task import order_created
 
 
 def order_create(request):
@@ -17,8 +18,12 @@ def order_create(request):
                                          quantity=item['quantity'])
             # очистка корзины
             cart.clear()
-            return render(request, 'orders/order/created.html',
-                          {'order': order})
+            order_created(order.id)
+            request.session['order_id'] = order.id
+            # redirect to the payment
+            return redirect('payment:process')
+          #  return render(request, 'orders/order/created.html',
+            #              {'order': order})
     else:
         form = OrderCreateForm
     return render(request, 'orders/order/create.html',
