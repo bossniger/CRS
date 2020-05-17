@@ -20,6 +20,13 @@ def cart_add(request, product_id):
 
 def cart_detail(request):
     cart = Cart(request)
+    # итерируемся ))0)
+    for item in cart:
+        item['update_quantity_form'] = CartAddProductForm(
+            initial={
+                'quantity': item['quantity'],
+                'update': True
+            })
     return render(request, 'cart/detail.html', {'cart': cart})
 
 
